@@ -23,19 +23,14 @@ public class Game {
 
 
             Team testTurn=teamTurn(map,player1,player2,turn);
-
-
-                //Vector2D pawnVector = new Vector2D(scannerActualPawnPosition(),scannerActualPawnPosition());
-                //Pawn pawn= new Pawn(player1, map);
             int posInit=scannerActualPawnPosition();
             int posInitbis =scannerActualPawnPosition();
                   if(map.getPawn(posInit,posInitbis).getOwner().getTeam()==testTurn){
+                      System.out.println();
                       map.movePawn(map.getPawn(posInit,posInitbis),
                               new Vector2D(scannerNewPawnPosition(), scannerNewPawnPosition()));
-                      //System.out.print("yes");
-
+                      turn+=1;
                   }
-            turn+=1;
             displayMap(map);
         }
     }
