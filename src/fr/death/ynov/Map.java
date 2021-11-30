@@ -61,7 +61,10 @@ public class Map {
     public void movePawn(Pawn pawn, Vector2D newPos) {
         this.map[pawn.getPosition().getY()][pawn.getPosition().getX()] = null;
         pawn.setPosition(newPos);
-        this.map[newPos.getY()][newPos.getX()] = pawn;
+        if(pawn.getPosition().getX() >= 0 && pawn.getPosition().getX() <= 9 &&
+                pawn.getPosition().getY() >= 0 && pawn.getPosition().getY() <= 9) {
+            this.map[newPos.getY()][newPos.getX()] = pawn;
+        }
     }
 
     enum StartPosition {

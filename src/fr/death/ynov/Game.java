@@ -6,69 +6,119 @@ public class Game {
 
     public void start() {
         final Map map = new Map();
-
         map.reset();
-
-
-
         final Player player1 = new Player(Team.WHITE);
         final Player player2 = new Player(Team.BLACK);
-
         map.spawnTeam(player1, Map.StartPosition.UP);
         map.spawnTeam(player2, Map.StartPosition.DOWN);
-
         displayMap(map);
         int turn = 0;
         while (!player1.isDeath() || !player2.isDeath()) {
-
-
             Team testTurn=teamTurn(map,player1,player2,turn);
-            int posInit=scannerActualPawnPosition();
-            int posInitbis =scannerActualPawnPosition();
-                  if(map.getPawn(posInit,posInitbis).getOwner().getTeam()==testTurn){
-                      System.out.println();
-                      map.movePawn(map.getPawn(posInit,posInitbis),
-                              new Vector2D(scannerNewPawnPosition(), scannerNewPawnPosition()));
-                      turn+=1;
+            Vector2D sideStep= scannerActualPawnPosition();
+                  if(map.getPawn(sideStep).getOwner().getTeam()==testTurn){
+
+
+                      map.movePawn(map.getPawn(sideStep),
+                              scannerNewPawnPosition(testTurn,sideStep.getX(),sideStep.getY()));
+                        if(scannerNewPawnPosition(testTurn,sideStep.getX(),sideStep.getY())!=sideStep){
+                            turn+=1;
+                        }
+
                   }
             displayMap(map);
         }
     }
+
     private Team teamTurn(Map map,Player White, Player Black, int turn){
         Team TeamTurn = Team.WHITE;
         String teamBlack= "Black ";
         String teamWhite= "White ";
-        //while(!White.isDeath() || !Black.isDeath()){
-
-
             if(turn%2!=0){
             TeamTurn = Team.BLACK;
                 System.out.print("C'est le tour de " + teamBlack);
-                //turn+=1;
-            return TeamTurn;
             }
             else{
                 System.out.print("C'est le tour de " + teamWhite);
-                //turn+=1;
-                return TeamTurn;
             }
+        return TeamTurn;
 
 
         //}
     }
 
-    private int scannerActualPawnPosition(){
-        System.out.println("veuillez choisir les coordonnées x et y du pion que vous souhaitez bouger :");
+    private Vector2D scannerActualPawnPosition(){
+        Vector2D initPos= new Vector2D(0,0);
+        System.out.println("veuillez choisir la coordonnée x  du pion que vous souhaitez bouger :");
         Scanner sc = new Scanner(System.in);
         int pos1 = sc.nextInt();
-        return pos1;
+        System.out.println("veuillez choisir la coordonnée y  du pion que vous souhaitez bouger :");
+        Scanner sc2 = new Scanner(System.in);
+        int pos2= sc.nextInt();
+        initPos.setX(pos1);
+        initPos.setY(pos2);
+        return initPos;
     }
 
-    private int scannerNewPawnPosition(){
-        System.out.println("Veuillez entrer les nouvelles coordonnées x, puis y du pion :");
-        Scanner sc = new Scanner(System.in);
-        int pos2 = sc.nextInt();
-        return pos2;
+    private Vector2D scannerNewPawnPosition(Team team, int x, int y){
+        Vector2D testPos= new Vector2D(x,y);
+        Vector2D newPos= new Vector2D(0,0);
+
+        //Scanner sc = new Scanner(System.in);
+        int pos2=0;
+        boolean valid= false;
+        while(valid){
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Veuillez choisir vos mouvements de pions :" +
+                    "\n1 - Diagonale Gauche" +
+                    "\n2 - Diagonale Droite");
+            if((x-1)>=0 || (x+1)<=9){
+                valid= true;
+                pos2 = sc.nextInt();
+            }
+            else{
+                valid=false;
+            }
+
+
+        }
+
+        if (team == Team.WHITE){
+            if( pos2==1 ){
+                newPos.setX(x-1);
+                newPos.setY(y+1);
+            }
+            else if (pos2==2 ){
+                newPos.setX(x+1);
+                newPos.setY(y+1);
+            }
+            else {
+                newPos.setX(x);
+                newPos.setY(y);
+                System.out.println("Le pion ne peut pas sortir du tableau !");
+
+
+
+            }
+        }
+        else if (team == Team.BLACK){
+            if (pos2==1 ){
+                newPos.setX(x-1);
+                newPos.setY(y-1);
+            }
+            else if (pos2==2 ){
+                newPos.setX(x+1);
+                newPos.setY(y-1);
+            }
+            else {
+                newPos.setX(x);
+                newPos.setY(y);
+                System.out.println("Le pion ne peut pas sortir du tableau !");
+
+            }
+        }
+
+        return newPos;
     }
 
     private void displayMap(Map map) {
