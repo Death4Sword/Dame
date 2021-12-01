@@ -1,7 +1,7 @@
 package fr.death.ynov;
 
 public enum Team {
-    WHITE('W'), BLACK('B');
+    WHITE('W'), BLACK('B'),NULL('N');
 
     private final char symbole;
 

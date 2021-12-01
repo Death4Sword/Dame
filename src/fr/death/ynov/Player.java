@@ -18,6 +18,7 @@ public class Player {
     public void addPawn(Pawn pawn) {
         this.pawnList.add(pawn);
     }
+    public List<Pawn> getPawnList(){return pawnList;}
 
     public void removePawn(Pawn pawn) {
         this.pawnList.remove(pawn);

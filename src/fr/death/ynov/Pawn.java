@@ -1,7 +1,7 @@
 package fr.death.ynov;
 
 public class Pawn {
-    private final Player owner;
+    private Player owner;
     private Vector2D position;
 
     public Pawn(Player owner, Map map) {
@@ -19,6 +19,7 @@ public class Pawn {
     public void setPosition(Vector2D position) {
         this.position = position;
     }
+    public void setPlayer(Player owner){this.owner=owner;}
 
     @Override
     public String toString() {
