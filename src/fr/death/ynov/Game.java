@@ -66,9 +66,8 @@ public class Game {
             }else if(testTurn== PawnPlayer2.getOwner().getTeam()){
                 sideStep= scannerActualPawnPosition(player2,map);
             }
-
                   if(map.getPawn(sideStep).getOwner().getTeam()==testTurn){
-                      Vector2D newPosition=scannerNewPawnPosition(testTurn,sideStep.getX(),sideStep.getY(),PawnTest);
+                      Vector2D newPosition=scannerNewPawnPosition(testTurn,sideStep.getX(),sideStep.getY(),PawnTest, map);
                       map.movePawn(map.getPawn(sideStep),newPosition);
                         if(newPosition!=sideStep){
                             turn+=1;
@@ -142,9 +141,22 @@ public class Game {
         return result;
         }
 
-    private Vector2D scannerNewPawnPosition(Team team, int x, int y,Pawn pawnTest){
+    private String getNextCase(Pawn pawnTest){
+        if (pawnTest.getOwner().getTeam() == Team.WHITE){
+            return "W";
+        }
+        else if(pawnTest.getOwner().getTeam() == Team.BLACK) {
+            return "B";
+        }
+        else{
+            return "N";
+        }
+    }
+
+    private Vector2D scannerNewPawnPosition(Team team, int x, int y,Pawn pawnTest, Map map){
         Vector2D testPos= new Vector2D(x,y);
         Vector2D newPos= new Vector2D(0,0);
+        Vector2D eatPawn = new Vector2D(0,0);
         System.out.println("Veuillez choisir vos mouvements de pions :" +
                     "\n1 - Diagonale Gauche" +
                     "\n2 - Diagonale Droite");
@@ -172,10 +184,18 @@ public class Game {
 
              if( pos2==1 && (x-1)>=0){
                  pawnTest.setPosition(toEatPawnNext);
-                 if(pawnTest.getOwner().getTeam()==Team.NULL){
-                     newPos.setX(x-1);
-                     newPos.setY(y+1);
-                    // System.out.println("OK");
+                 if(getNextCase(map.getPawn(pawnTest.getPosition().getX() - 1, pawnTest.getPosition().getY() + 1)).equals("B")){
+                     if(getNextCase(map.getPawn(pawnTest.getPosition().getX() - 2, pawnTest.getPosition().getY() + 2)).equals("N")) {
+                         eatPawn.setX(pawnTest.getPosition().getX() -1);
+                         eatPawn.setY(pawnTest.getPosition().getY() +1);
+                         map.removePawn(eatPawn);
+                         newPos.setX(x - 2);
+                         newPos.setY(y + 2);
+                     }
+                 }
+                 else if(getNextCase(map.getPawn(pawnTest.getPosition().getX() - 1, pawnTest.getPosition().getY() + 1)).equals("W")){
+                     System.out.println("Coup impossible, vous avez déjà un pion sur cette case !");
+                     return scannerNewPawnPosition(team, x , y, pawnTest, map);
                  }
             } else if (pos2==2 && (x+1)<=9) {
                  pawnTest.setPosition(toEatPawn);
@@ -210,6 +230,7 @@ public class Game {
     }
 
     private void displayMap(Map map) {
+        System.out.println("  01236456789");
         for (int y = 0; y < 10; y++) {
             System.out.print(y + "|");
             for (int x = 0; x < 10; x++) {
